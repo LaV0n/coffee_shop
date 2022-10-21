@@ -1,23 +1,27 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
-import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
-
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
+import {ColorSchemeName} from 'react-native';
+import { MainScreen } from '../screens/MainScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import { RootStackParamList, RootTabParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import {Favorites} from "../screens/Favorites";
+import {Cart} from "../screens/Cart";
+import {Notice} from "../screens/Notice";
+import { Profile } from '../screens/Profile';
+import {HomeSVG} from "../components/svgIcons/HomeSVG";
+import {HomeSVG_} from "../components/svgIcons/HomeSVG_";
+import {FavoriteSVG} from "../components/svgIcons/FavoriteSVG";
+import { FavoriteSVG_ } from '../components/svgIcons/FavoriteSVG_';
+import {CartSVG} from "../components/svgIcons/CartSVG";
+import {CartSVG_} from "../components/svgIcons/CartSVG_";
+import {NoticeSVG} from "../components/svgIcons/NoticeSVG";
+import {NoticeSVG_} from "../components/svgIcons/NoticeSVG_";
+import {ProfileSVG} from "../components/svgIcons/ProfileSVG";
+import {ProfileSVG_} from "../components/svgIcons/ProfileSVG_";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -38,7 +42,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false ,fullScreenGestureEnabled:true}}  />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
@@ -54,54 +58,65 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+
 
   return (
-    <BottomTab.Navigator
-      initialRouteName="TabOne"
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
-      <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
+          <BottomTab.Navigator
+              initialRouteName='MainScreen'
+              screenOptions={{
+                  tabBarStyle:{height:80},
+              }}
+          >
+              <BottomTab.Screen
+                  name="MainScreen"
+                  component={MainScreen}
+                  options={{
+                      headerShown: false,
+                      title:'',
+                      tabBarIcon: ({focused}) => focused ? <HomeSVG /> : <HomeSVG_/>
+                  }}
               />
-            </Pressable>
-          ),
-        })}
-      />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </BottomTab.Navigator>
+              <BottomTab.Screen
+                  name="Favorites"
+                  component={Favorites}
+                  options={{
+                      headerShown: false,
+                      title:'',
+                      tabBarIcon: ( {focused} ) =>  focused ?<FavoriteSVG/> :<FavoriteSVG_/>,
+                  }}
+              />
+              <BottomTab.Screen
+                  name="Cart"
+                  component={Cart}
+                  options={{
+                      headerShown: false,
+                      title:'',
+                      tabBarIcon:( {focused} ) =>  focused ?<CartSVG/> :<CartSVG_/>,
+                  }}
+              />
+              <BottomTab.Screen
+                  name="Notice"
+                  component={Notice}
+                  options={{
+                      headerShown: false,
+                      title:'',
+                      tabBarIcon: ( {focused} ) =>  focused ?<NoticeSVG/> :<NoticeSVG_/>,
+                  }}
+              />
+              <BottomTab.Screen
+                  name="Profile"
+                  component={Profile}
+                  options={{
+                      headerShown: false,
+                      title:'',
+                      tabBarIcon: ( {focused} ) =>  focused ?<ProfileSVG/> :<ProfileSVG_/>,
+                  }}
+              />
+          </BottomTab.Navigator>
   );
 }
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
+
