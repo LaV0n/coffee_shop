@@ -16,7 +16,7 @@ export const CapOfCoffee = ({data}: DataType) => {
     const [visibility, setVisibility] = useState(false)
 
     return (
-        <TouchableOpacity onLongPress={() => setVisibility(true)}>
+        <View >
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -26,18 +26,18 @@ export const CapOfCoffee = ({data}: DataType) => {
             />
             </Modal>
             <View style={styles.container}>
-                <View>
+                <TouchableOpacity onPress={() => setVisibility(true)} >
                     <Image
                         source={{uri: data.img}}
-                        style={styles.image}/>
-
+                        style={styles.image}
+                    />
                     <View style={styles.rating}>
                         <StarSVG/>
                         <Text style={styles.ratingTitle}>
                             {data.rating}
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
                 <View>
                     <Text style={styles.typeTitle}>
                         {data.type}
@@ -57,7 +57,7 @@ export const CapOfCoffee = ({data}: DataType) => {
                     <Text style={styles.addButton}>+</Text>
                 </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+        </View>
     )
 }
 

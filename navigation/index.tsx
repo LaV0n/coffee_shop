@@ -2,9 +2,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import {ColorSchemeName} from 'react-native';
+import {ColorSchemeName, StyleSheet} from 'react-native';
 import { MainScreen } from '../screens/MainScreen';
-import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList, RootTabParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -22,6 +21,7 @@ import {NoticeSVG} from "../components/svgIcons/NoticeSVG";
 import {NoticeSVG_} from "../components/svgIcons/NoticeSVG_";
 import {ProfileSVG} from "../components/svgIcons/ProfileSVG";
 import {ProfileSVG_} from "../components/svgIcons/ProfileSVG_";
+import {useAppSelector} from "../bll/store";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -44,9 +44,6 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false ,fullScreenGestureEnabled:true}}  />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
     </Stack.Navigator>
   );
 }
@@ -58,6 +55,8 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
+
+    const items=useAppSelector(state => state.coffee.data)
 
 
   return (
@@ -90,7 +89,8 @@ function BottomTabNavigator() {
                   component={Cart}
                   options={{
                       headerShown: false,
-                      title:'',
+                      tabBarLabelStyle:items.length!==0?styles.tabBarLabel: null,
+                      title: items.length!==0?items.reduce((acc,c)=>acc+c.count,0).toString():'',
                       tabBarIcon:( {focused} ) =>  focused ?<CartSVG/> :<CartSVG_/>,
                   }}
               />
@@ -116,7 +116,18 @@ function BottomTabNavigator() {
   );
 }
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
+
+const styles = StyleSheet.create({
+    tabBarLabel: {
+       fontSize:18,
+        position:"absolute",
+        bottom:10,
+        backgroundColor:'rgba(150,114,89,0.87)',
+        borderRadius:20,
+        paddingHorizontal:7,
+        borderWidth:1,
+        borderColor:'#fff',
+        color:'#fff'
+    }
+})
 

@@ -1,11 +1,11 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {CoffeeType} from "../../bll/coffeeReducer";
+import {addCoffee, CoffeeType,  setNewParam} from "../../bll/coffeeReducer";
 import {BackSVG} from "../svgIcons/BackSVG";
-import {useState} from "react";
 import {HeartSVG} from "../svgIcons/HeartSVG";
 import {StarSVG} from "../svgIcons/StarSVG";
 import {CoffeeTypeSVG} from "../svgIcons/coffeeTypeSVG";
 import {ChocoSVG} from "../svgIcons/ChocoSVG";
+import {useAppDispatch} from "../../bll/store";
 
 type CapType = {
     setVisibility: (value: boolean) => void
@@ -14,7 +14,11 @@ type CapType = {
 
 export const Cap = ({setVisibility, data}: CapType) => {
 
-    const [favorite, setFavorite] = useState(false)
+    const dispatch=useAppDispatch()
+
+    const setFavoriteHandler=()=>{
+        dispatch(setNewParam({id:data.id,favorite:!data.favorite}))
+    }
 
     return (
         <View style={styles.container}>
@@ -22,10 +26,8 @@ export const Cap = ({setVisibility, data}: CapType) => {
                 <TouchableOpacity onPress={() => setVisibility(false)} style={styles.back}>
                     <BackSVG/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                    setFavorite(!favorite)
-                }} style={styles.favorite}>
-                    <HeartSVG color={favorite ? '#f60000' : '#918b8b'}/>
+                <TouchableOpacity onPress={setFavoriteHandler} style={styles.favorite}>
+                    <HeartSVG color={data.favorite ? '#f60000' : '#918b8b'}/>
                 </TouchableOpacity>
                 <View style={styles.nameBlock}>
                     <View style={{height: '100%'}}>
@@ -57,7 +59,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
                     Choice of chocolate
                 </Text>
                 <View style={styles.chocoBlock}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>dispatch(setNewParam({id:data.id}))}>
                         <Text style={[styles.chocoType, data.choco === 'white' && {
                             backgroundColor: '#967259',
                             color: '#fff'
@@ -150,7 +152,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
                             $ {data.price}
                         </Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>dispatch(addCoffee({cap:data}))}>
                         <Text style={styles.buyButton}>
                             Buy now
                         </Text>
