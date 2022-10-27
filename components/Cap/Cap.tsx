@@ -1,11 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {addCoffee, CoffeeType,  setNewParam} from "../../bll/coffeeReducer";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {addCoffee, ChocoType, CoffeeType, setNewParam, SizeType} from "../../bll/coffeeReducer";
 import {BackSVG} from "../svgIcons/BackSVG";
 import {HeartSVG} from "../svgIcons/HeartSVG";
 import {StarSVG} from "../svgIcons/StarSVG";
 import {CoffeeTypeSVG} from "../svgIcons/coffeeTypeSVG";
 import {ChocoSVG} from "../svgIcons/ChocoSVG";
-import {useAppDispatch} from "../../bll/store";
+import {useAppDispatch, useAppSelector} from "../../bll/store";
 
 type CapType = {
     setVisibility: (value: boolean) => void
@@ -14,10 +14,19 @@ type CapType = {
 
 export const Cap = ({setVisibility, data}: CapType) => {
 
-    const dispatch=useAppDispatch()
+    const dispatch = useAppDispatch()
+    const favorite = useAppSelector(state => state.coffee.startData[data.id].favorite)
+    const choco=useAppSelector(state => state.coffee.startData[data.id].choco)
+    const size=useAppSelector(state => state.coffee.startData[data.id].size)
 
-    const setFavoriteHandler=()=>{
-        dispatch(setNewParam({id:data.id,favorite:!data.favorite}))
+    const setFavoriteHandler = ()=> {
+       dispatch(setNewParam({id: data.id,favorite:true}))
+    }
+    const setChocoHandler = (choco:ChocoType)=> {
+        dispatch(setNewParam({id: data.id,choco}))
+    }
+    const setSizeHandler = (size:SizeType)=> {
+        dispatch(setNewParam({id: data.id,size}))
     }
 
     return (
@@ -27,7 +36,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
                     <BackSVG/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={setFavoriteHandler} style={styles.favorite}>
-                    <HeartSVG color={data.favorite ? '#f60000' : '#918b8b'}/>
+                    <HeartSVG color={favorite ? '#f60000' : '#918b8b'}/>
                 </TouchableOpacity>
                 <View style={styles.nameBlock}>
                     <View style={{height: '100%'}}>
@@ -43,7 +52,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
                     </View>
                     <View style={styles.addBlock}>
                         <CoffeeTypeSVG/>
-                        {data.choco && <ChocoSVG style={{marginLeft: 10}}/>}
+                        {choco!=='without' && <ChocoSVG style={{marginLeft: 10}}/>}
                     </View>
                 </View>
                 <Image source={{uri: data.img}} style={styles.image}/>
@@ -59,28 +68,36 @@ export const Cap = ({setVisibility, data}: CapType) => {
                     Choice of chocolate
                 </Text>
                 <View style={styles.chocoBlock}>
-                    <TouchableOpacity onPress={()=>dispatch(setNewParam({id:data.id}))}>
-                        <Text style={[styles.chocoType, data.choco === 'white' && {
+                    <TouchableOpacity onPress={() => {setChocoHandler('white')}}>
+                        <Text style={[styles.chocoType, choco === 'white' && {
                             backgroundColor: '#967259',
                             color: '#fff'
                         }]}>
                             White
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={[styles.chocoType, data.choco === 'milk' && {
+                    <TouchableOpacity onPress={() => {setChocoHandler('milk')}}>
+                        <Text style={[styles.chocoType, choco === 'milk' && {
                             backgroundColor: '#967259',
                             color: '#fff'
                         }]}>
                             Milk
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={[styles.chocoType, data.choco === 'dark' && {
+                    <TouchableOpacity onPress={() => {setChocoHandler('dark')}}>
+                        <Text style={[styles.chocoType, choco === 'dark' && {
                             backgroundColor: '#967259',
                             color: '#fff'
                         }]}>
                             Dark
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {setChocoHandler('without')}}>
+                        <Text style={[styles.chocoType, choco === 'without' && {
+                            backgroundColor: '#967259',
+                            color: '#fff'
+                        }]}>
+                            Without
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -90,24 +107,24 @@ export const Cap = ({setVisibility, data}: CapType) => {
                             Size
                         </Text>
                         <View style={styles.sizeBlock}>
-                            <TouchableOpacity>
-                                <Text style={[styles.size, data.size === 'small' && {
+                            <TouchableOpacity onPress={()=>setSizeHandler('small')}>
+                                <Text style={[styles.size, size === 'small' && {
                                     backgroundColor: '#967259',
                                     color: '#fff'
                                 }]}>
                                     S
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Text style={[styles.size, data.size === 'medium' && {
+                            <TouchableOpacity onPress={()=>setSizeHandler('medium')}>
+                                <Text style={[styles.size, size === 'medium' && {
                                     backgroundColor: '#967259',
                                     color: '#fff'
                                 }]}>
                                     M
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Text style={[styles.size, data.size === 'large' && {
+                            <TouchableOpacity onPress={()=>setSizeHandler('large')}>
+                                <Text style={[styles.size, size === 'large' && {
                                     backgroundColor: '#967259',
                                     color: '#fff'
                                 }]}>
@@ -152,7 +169,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
                             $ {data.price}
                         </Text>
                     </View>
-                    <TouchableOpacity onPress={()=>dispatch(addCoffee({cap:data}))}>
+                    <TouchableOpacity onPress={() => dispatch(addCoffee({cap: data}))}>
                         <Text style={styles.buyButton}>
                             Buy now
                         </Text>
@@ -300,13 +317,13 @@ const styles = StyleSheet.create({
     },
     buyButton: {
         height: 50,
-        fontSize:16,
-        fontWeight:'600',
-        color:'#fff',
-        backgroundColor:'#967259',
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#fff',
+        backgroundColor: '#967259',
         textAlign: 'center',
         paddingVertical: 10,
         paddingHorizontal: 40,
-        borderRadius:40
+        borderRadius: 40
     }
 });

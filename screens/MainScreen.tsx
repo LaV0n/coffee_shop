@@ -6,12 +6,13 @@ import {useState} from "react";
 import {DotSVG} from "../components/svgIcons/DotSVG";
 import {CapOfCoffee} from "../components/CapOfCoffee/CapOfCoffee";
 import { useAppSelector} from '../bll/store';
+import {CoffeeType} from "../bll/coffeeReducer";
 
 export function MainScreen() {
 
     const [coffeeType, setCoffeeType] = useState<'Espresso' | 'Latte' | 'Cappuccino' | 'Cafetière'>('Espresso')
     const [value, setValue] = useState('')
-    const startState=useAppSelector(state => state.coffee.startData)
+    const startState=useAppSelector<CoffeeType[]>(state => state.coffee.startData)
     const [coffeePack, setCoffeePack] = useState(startState)
 
 
