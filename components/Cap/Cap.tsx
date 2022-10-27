@@ -178,7 +178,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
                     </View>
                     <TouchableOpacity onPress={addCapHandler}>
                         <Text style={styles.buyButton}>
-                            Buy now
+                            Add to cart
                         </Text>
                     </TouchableOpacity>
                 </View>
