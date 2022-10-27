@@ -192,11 +192,11 @@ const slice = createSlice({
     name: 'coffee',
     initialState,
     reducers: {
-        addCoffee(state, action:PayloadAction<{cap:CoffeeType}>){
+        addCoffee(state, action:PayloadAction<{cap:CoffeeType,count?:number}>){
           if(state.data.findIndex(d=>d.cap.id===action.payload.cap.id) ===-1){
-              state.data.unshift({cap:action.payload.cap,count:1})
+              state.data.unshift({cap:action.payload.cap,count: action.payload.count?action.payload.count:1})
           }else {
-              state.data.map(d=>d.cap.id===action.payload.cap.id?{...d,count:d.count++}:d)
+              state.data.map(d=>d.cap.id===action.payload.cap.id?{...d,count:action.payload.count?action.payload.count:d.count++}:d)
           }
         },
         deleteCoffee(state, action:PayloadAction<{id:number}>){

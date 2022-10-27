@@ -6,6 +6,7 @@ import {StarSVG} from "../svgIcons/StarSVG";
 import {CoffeeTypeSVG} from "../svgIcons/coffeeTypeSVG";
 import {ChocoSVG} from "../svgIcons/ChocoSVG";
 import {useAppDispatch, useAppSelector} from "../../bll/store";
+import {useState} from "react";
 
 type CapType = {
     setVisibility: (value: boolean) => void
@@ -19,6 +20,8 @@ export const Cap = ({setVisibility, data}: CapType) => {
     const choco=useAppSelector(state => state.coffee.startData[data.id].choco)
     const size=useAppSelector(state => state.coffee.startData[data.id].size)
 
+    const [quantity,setQuantity]=useState(1)
+
     const setFavoriteHandler = ()=> {
        dispatch(setNewParam({id: data.id,favorite:true}))
     }
@@ -27,6 +30,10 @@ export const Cap = ({setVisibility, data}: CapType) => {
     }
     const setSizeHandler = (size:SizeType)=> {
         dispatch(setNewParam({id: data.id,size}))
+    }
+    const addCapHandler = ()=> {
+        dispatch(addCoffee({cap:data,count:quantity}))
+        setVisibility(false)
     }
 
     return (
@@ -138,18 +145,18 @@ export const Cap = ({setVisibility, data}: CapType) => {
                             Quantity
                         </Text>
                         <View style={styles.sizeBlock}>
-                            <TouchableOpacity>
-                                <Text style={[styles.size, {
-                                    backgroundColor: '#967259',
+                            <TouchableOpacity onPress={()=>setQuantity(quantity-1)} disabled={quantity===1}>
+                                <Text style={[styles.size, quantity!==1 && {
+                                    backgroundColor:  '#967259',
                                     color: '#fff'
                                 }]}>
                                     -
                                 </Text>
                             </TouchableOpacity>
                             <Text>
-                                1
+                                {quantity}
                             </Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>setQuantity(quantity+1)}>
                                 <Text style={[styles.size, {
                                     backgroundColor: '#967259',
                                     color: '#fff'
@@ -166,10 +173,10 @@ export const Cap = ({setVisibility, data}: CapType) => {
                             Price
                         </Text>
                         <Text style={{fontSize: 24, fontWeight: '700'}}>
-                            $ {data.price}
+                            $ {data.price*quantity}
                         </Text>
                     </View>
-                    <TouchableOpacity onPress={() => dispatch(addCoffee({cap: data}))}>
+                    <TouchableOpacity onPress={addCapHandler}>
                         <Text style={styles.buyButton}>
                             Buy now
                         </Text>
