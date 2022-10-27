@@ -32,7 +32,7 @@ export const Cap = ({setVisibility, data}: CapType) => {
         dispatch(setNewParam({id: data.id,size}))
     }
     const addCapHandler = ()=> {
-        dispatch(addCoffee({cap:data,count:quantity}))
+        dispatch(addCoffee({cap:data, count:quantity}))
         setVisibility(false)
     }
 
