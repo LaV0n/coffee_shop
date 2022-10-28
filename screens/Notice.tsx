@@ -1,30 +1,41 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
+import {Text, View} from '../components/Themed';
 
-import { Text, View } from '../components/Themed';
+type MessagesType = {
+    id: number
+    text: string
+}
 
-export  function Notice() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Notice</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+export function Notice() {
 
-    </View>
-  );
+    const messages: MessagesType[] = []
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Notice</Text>
+            <View style={styles.messages}>
+                {messages.length === 0
+                    ? <Text>no messages</Text>
+                    : messages.map(m => <Text key={m.id}>{m.text}</Text>)
+                }
+            </View>
+
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+    container: {
+        paddingTop: 30,
+        flex: 1,
+        alignItems: 'center',
+
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    messages: {
+        marginTop:20
+    },
 });
