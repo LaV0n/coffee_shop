@@ -3,7 +3,8 @@
 Symple shop with cart and future ability to work with REST API
 
 #Tabs view
-#![](https://github.com/LaV0n/coffee_shop/blob/master/assets/gifs/review.gif)
+#
+![](https://github.com/LaV0n/coffee_shop/blob/master/assets/gifs/review.gif)
 
 #Main Screen
 ![](https://github.com/LaV0n/coffee_shop/blob/master/assets/gifs/mainFind.gif)
