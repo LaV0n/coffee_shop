@@ -1,4 +1,4 @@
-#Coffee Shop mobile APK 
+# Coffee Shop mobile APK 
 
 Stack: *React Native/Expo/Redux-Toolkit*
 
